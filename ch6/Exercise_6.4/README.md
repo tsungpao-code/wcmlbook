@@ -59,7 +59,7 @@ Where:
 
 ### Client Selection
 
-In each round, 10% of clients are randomly selected to participate in training.
+In each round, 50% of clients are randomly selected to participate in training.
 
 ## Running the Experiments
 

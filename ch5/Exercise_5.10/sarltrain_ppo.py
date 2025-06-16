@@ -148,7 +148,7 @@ class Agent:
             l_s_.append(torch.tensor([[s_]], dtype=torch.float))
         s = torch.cat(l_s, dim=0).to(device)
         a = torch.cat(l_a, dim=0).to(device)
-        a_prob = torch.cat(l_r, dim=0).unsqueeze(1).to(device)
+        a_prob = torch.cat(l_a_p, dim=0).unsqueeze(1).to(device)
         r = torch.cat(l_r, dim=0).unsqueeze(1).to(device)
         s_ = torch.cat(l_s_, dim=0).squeeze(1).to(device)
         self.data_buffer = []

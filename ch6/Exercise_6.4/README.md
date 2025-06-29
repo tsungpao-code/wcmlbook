@@ -29,8 +29,8 @@ where:
 
 | Checklist | Details |
 |-----------|---------|
-| **Code** | Open `exercise_6.4_starter.py` and look for the `# YOUR CODE HERE` block inside **`local_train`**. Replace the placeholder with code that:<br>  • zero gradients;<br>  • computes NLL on the batch;<br>  • computes the proximal penalty;<br>  • sums them and performs a backward/step update. |
-| **Run** | Execute:<br>`python exercise_6.6_starter.py` |
+| **Code** | Open `exercise_6.4_starter.py` and look for the `# YOUR CODE HERE` block inside **`local_train`**. Replace the placeholder with code that:<br>  • zero gradients;<br>  • computes NLL on the batch;<br>  • computes the proximal penalty;<br>  • `backward()` and `opt.step()`.  |
+| **Run** | Execute: `python exercise_6.4_starter.py` |
 | **Observe** | A plot `fedprox_mu_impact.png` is saved showing test accuracy vs. communication rounds for each $\mu$. |
 
 

@@ -1,3 +1,16 @@
+"""
+Exercise 1.12: PPO Implementation for MountainCar-v0
+
+This script sets up the Actor-Critic architecture to solve the MountainCar-v0
+environment from OpenAI Gym using Proximal Policy Optimization (PPO).
+
+TODO:
+Complete the PPO algorithm in the `update` method of the `PPO` class:
+1. Calculate the importance ratio.
+2. Update the actor network.
+3. Update the critic network.
+"""
+
 import argparse
 import pickle
 from collections import namedtuple
@@ -127,13 +140,16 @@ class PPO():
                 # epoch iteration, PPO core!!!
                 action_prob = self.actor_net(state[index]).gather(1, action[index])  # new policy
 
-                # Please fill the following codes to implement the PPO algorithm.
+                # ─── YOUR CODE HERE ──────────────────────────────────────────── #
                 # calculate the importance ratio
 
                 # update actor network
 
                 # update critic network
-                
+
+                pass
+                # ─────────────────────────────────────────────────────────────── #
+
                 self.training_step += 1
 
         del self.buffer[:]  # clear experience

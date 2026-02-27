@@ -1,6 +1,6 @@
 # Exercise 6.6: FedAvg Implementation under Packet Loss
 
-This repository provides the starter code for Exercise 6.6. Your objective is to simulate the impact of **packet loss** on federated learning using the FedAvg algorithm.
+This repository provides the starter code for Exercise 6.6. Your task is to simulate the impact of **packet loss** on federated learning using the FedAvg algorithm.
 
 
 ## Experiment Setup

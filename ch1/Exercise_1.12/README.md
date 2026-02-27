@@ -1,14 +1,6 @@
 # Exercise 1.12: PPO Implementation for MountainCar-v0
 
-This repository provides the starter code for Exercise 1.12. Your objective is to implement the **Proximal Policy Optimization (PPO)** algorithm to solve the classic `MountainCar-v0` reinforcement learning task.
-
-## Experiment Setup
-The script is pre-configured with the following environment and algorithm parameters:
-* **Environment:** `MountainCar-v0` (OpenAI Gym)
-* **State Space:** Car position and velocity
-* **Action Space:** Discrete (Push left, Push right, Do nothing)
-* **Algorithm:** PPO with Actor-Critic architecture
-* **Hyperparameters:** Discount factor $\gamma = 0.99$, Clip parameter = 0.2
+This repository provides the starter code for Exercise 1.12. Your task is to implement the **Proximal Policy Optimization (PPO)** algorithm to solve the classic `MountainCar-v0` reinforcement learning task.
 
 ## What You Need to Do
 

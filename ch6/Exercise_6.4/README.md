@@ -1,6 +1,6 @@
 # Exercise 6.4: FedProx Implementation for MNIST Classification
 
-This repository provides the starter code for Exercise 6.4. Your objective is to implement the **proximal term** of the FedProx algorithm and evaluate its performance on a non-i.i.d. MNIST dataset.
+This repository provides the starter code for Exercise 6.4. Your task is to implement the **proximal term** of the FedProx algorithm and evaluate its performance on a non-i.i.d. MNIST dataset.
 
 ## Experiment Setup
 The script is pre-configured with the specific parameters from the textbook:

@@ -1,7 +1,20 @@
-# BERT for calculating sentance similarity
-This code is a copy from the reference code link for Exercise 4.13.
-In order to utilize the pre-trained BERT model, here are a few steps you need to follow:
-1. Download the pre-trained BERT model from [https://github.com/google-research/bert?tab=readme-ov-file](https://github.com/google-research/bert?tab=readme-ov-file) and the files named 'config.json' and 'pytorch_model.bin' from [https://huggingface.co/bert-base-uncased/tree/main](https://huggingface.co/bert-base-uncased/tree/main).
-2. Put the all unziped files into the BERT folder.
-3. Install the 'transformers' package through pip.
-4. Run the 'bert.py' file.
+# Exercise 4.13: BERT Sentence Similarity with Cosine Distance
+
+This repository provides the starter code for Exercise 4.13. Your task is to implement the **sentence vector extraction**, **normalization**, and **cosine similarity calculation** steps to compute the semantic similarity between two sentences using the BERT model.
+
+## What You Need to Do
+
+| Checklist | Details |
+|-----------|---------|
+| **Code** | Open `bert_similarity_starter.py` and download the pre-trained BERT model (`bert-base-uncased`) from [https://huggingface.co/google-bert/bert-base-uncased](https://huggingface.co/google-bert/bert-base-uncased) to the local `./BERT` directory. |
+| **Run** | Execute: `python bert_similarity_starter.py` |
+| **Observe** | The terminal will output the two sentences and their calculated semantic similarity score. |
+
+> **Hint:** The cosine similarity between two normalized vectors is equal to their dot product: $similarity = A \cdot B$.
+
+## Files
+
+| File | Purpose |
+|------|---------|
+| `bert_similarity_starter.py` | Starter script. Contains the core logic for tokenization, model inference, and similarity calculation. |
+| `./BERT/` | Directory containing the pre-trained BERT model and tokenizer files. |

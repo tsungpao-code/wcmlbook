@@ -13,8 +13,14 @@ def WMMSE_sum_rate(p_int, H, Pmax, var_noise):
 
     VV = np.zeros(100)
     for iter in range(100):
-        # Write your code here
-            break
+         # ─── YOUR CODE HERE ──────────────────────────────────────────── #
+         # WMMSE algorithm
+         # 1. Update the receiver filter f
+         # 2. Update the weight w
+         # 3. Update the transmit amplitude b
+         # 4. Update the objective value VV
+         # ─────────────────────────────────────────────────────────────── #
+
 
     p_opt = np.square(b)
     return p_opt

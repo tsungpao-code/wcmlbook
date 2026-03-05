@@ -221,9 +221,14 @@ class PowerControl:
                 idx = np.random.randint(self.num_train, size=batch_size)
                 for i in range(len(self.DNNs)):
 
-                    '''
-                        Write your code here
-                    '''
+                    # ─── YOUR CODE HERE ──────────────────────────────────────────── #
+                    # Use the unsupervised learning approach to solve the power-allocation problem by training the DNN.
+                    # 1. Zero existing gradients
+                    # 2. Forward pass
+                    # 3. Compute loss
+                    # 4. Backward pass
+                    # 5. Update parameters
+                    # ─────────────────────────────────────────────────────────────── #
 
             MSETime[epoch, 0] = np.asarray(self.loss.item())
             # MSETime[epoch, 1] = np.asarray(-(self.sum_rate(self.X_val.detach(), self.DNN(self.X_val).detach(), self.num_val)).item())

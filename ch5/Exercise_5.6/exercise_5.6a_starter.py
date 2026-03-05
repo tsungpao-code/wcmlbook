@@ -208,9 +208,14 @@ class PowerControl:
         for epoch in range(training_epochs):
             for i in range(total_batch):
 
-            ''' 
-                Write your code here
-            '''
+            # ─── YOUR CODE HERE ──────────────────────────────────────────── # 
+            # Use the supervised learning approach to solve the power-allocation problem by training the DNN.
+            # 1. Zero existing gradients
+            # 2. Forward pass
+            # 3. Compute loss
+            # 4. Backward pass
+            # 5. Update parameters
+            # ─────────────────────────────────────────────────────────────── #
 
             if epoch%(int(training_epochs/10))==0:
                 print('epoch:%d, '%epoch, 'train:%0.2f%%, '%(loss.item()*100), 'validation:%0.2f%%.'%(MSETime[epoch, 1]*100))

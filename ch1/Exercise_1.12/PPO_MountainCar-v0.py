@@ -141,11 +141,31 @@ class PPO():
                 action_prob = self.actor_net(state[index]).gather(1, action[index])  # new policy
 
                 # ─── YOUR CODE HERE ──────────────────────────────────────────── #
-                # calculate the importance ratio
+                # 1. 計算重要性比率 (Importance Ratio)
+                
+                ratio = action_prob / old_action_log_prob[index] 
 
-                # update actor network
+                # 2. 計算代理損失函數 (Surrogate Objective)
+                surr1 = ratio * advantage 
+                surr2 = torch.clamp(ratio, 1 - self.clip_param, 1 + self.clip_param) * advantage 
 
-                # update critic network
+                # 3. 更新 Actor 網路 (Policy Network)
+                action_loss = -torch.min(surr1, surr2).mean() 
+                self.actor_optimizer.zero_grad() 
+                action_loss.backward() 
+                nn.utils.clip_grad_norm_(self.actor_net.parameters(), self.max_grad_norm) 
+                self.actor_optimizer.step() 
+
+                # 4. 更新 Critic 網路 (Value Network)
+                value_loss = F.mse_loss(Gt_index, V) 
+                self.critic_net_optimizer.zero_grad() 
+                value_loss.backward() 
+                nn.utils.clip_grad_norm_(self.critic_net.parameters(), self.max_grad_norm)
+                self.critic_net_optimizer.step() 
+                
+                # 紀錄到 Tensorboard (選配)
+                self.writer.add_scalar('loss/action_loss', action_loss, global_step=self.training_step) 
+                self.writer.add_scalar('loss/value_loss', value_loss, global_step=self.training_step) 
 
                 pass
                 # ─────────────────────────────────────────────────────────────── #

@@ -138,7 +138,7 @@ mean_set_QAM = np.asarray([-3 - 3j, -3 - 1j, -3 + 1j, -3 + 3j, -1 - 3j, -1 - 1j,
 # load .mat dataset
 mat_file_path = 'rayleigh_channel_dataset.mat'  # file name
 mat_data = sio.loadmat(mat_file_path)
-h_dataset = mat_data['h_siso'].flatten()
+h_dataset = mat_data['h_mimo'].flatten()
 
 batch_size = 512
 condition_depth = 2

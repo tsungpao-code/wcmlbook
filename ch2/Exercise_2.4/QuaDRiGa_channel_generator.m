@@ -5,8 +5,8 @@ clc;
 
 %% 1. Define Simulation Parameters
 fc = 3.5e9;                 % Center frequency (Hz)
-num_tx = 1;                 % Number of transmit antennas (for SISO)
-num_rx = 1;                 % Number of receive antennas (for SISO)
+num_tx = 2;                 % Number of transmit antennas 
+num_rx = 2;                 % Number of receive antennas 
 ue_speed_kmh = 3;           % User equipment (UE) speed (km/h)
 num_snapshots = 20000;      % Number of channel snapshots (samples) to generate
 
@@ -58,22 +58,22 @@ h = get_channels(b);
 
 % Extract the channel coefficient matrix
 % The dimensions of h.coeff are [Rx_Ant, Tx_Ant, Num_Clusters, Num_Snapshots]
-% For our SISO case, the dimensions are [1, 1, Num_Clusters, Num_Snapshots]
+% For case, the dimensions are [1, 1, Num_Clusters, Num_Snapshots]
 h_coeff = h.coeff;
 
 % For a Rayleigh flat-fading model, we sum the contributions of all paths (clusters)
 % The dimensions of h_flat become [Rx_Ant, Tx_Ant, Num_Snapshots]
 h_flat = sum(h_coeff, 3);
 
-% Since this is a SISO system, squeeze the dimensions to get a vector
+% Since this is a  system, squeeze the dimensions to get a vector
 % The final h_siso will have dimensions [1, Num_Snapshots] or [Num_Snapshots, 1]
-h_siso = squeeze(h_flat);
-fprintf('Processed SISO channel vector size: [%s]\n', num2str(size(h_siso)));
+h_mimo = squeeze(h_flat);
+fprintf('Processed SISO channel vector size: [%s]\n', num2str(size(h_mimo)));
 
 
 
 %% 4. Save the Dataset
 dataset_filename = 'rayleigh_channel_dataset.mat';
-save(dataset_filename, 'h_siso');
+save(dataset_filename, 'h_mimo');
 
 fprintf('\nDataset saved to ''%s''\n', dataset_filename);

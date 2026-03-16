@@ -1,37 +1,75 @@
-# Exercise 2.4: Channel GAN Implementation
+# Exercise 2.4：Channel GAN Implementation
 
-This repository provides the starter code for Exercise 2.4. Your task is to implement the data generation function for a **Conditional Generative Adversarial Network (CGAN)** that simulates a Rayleigh fading channel. The goal is to learn the channel distribution without explicit channel state information (CSI).
+本作業實作 Exercise 2.4，目標是利用 **Conditional Generative Adversarial Network (CGAN)** 來模擬 Rayleigh fading 通道的接收訊號分布。此方法的核心概念是在不知道完整通道資訊（CSI）的情況下，透過 GAN 學習通道輸出的統計特性。
 
-## Experiment Setup
+本實驗使用 QuaDRiGa 生成的通道資料 `rayleigh_channel_dataset.mat` 作為訓練資料來源，並在 Python 程式 `Exercise_2_4_starter.py` 中完成原本 TODO 的資料生成函式 `generate_real_samples_with_labels_Rayleigh()`，用來產生 GAN 訓練所需的真實樣本。
 
-The script is set up to train a CGAN using a pre-generated dataset of channel coefficients:
+在該函式中，首先從通道資料集中隨機選取通道係數 \(h\)，接著隨機生成 **16-QAM 傳送符號 \(x\)**。然後根據無線通道模型
 
-*   **Dataset:** `rayleigh_channel_dataset.mat` (generated via QuaDRiGa)
-*   **Model Architecture:** Conditional GAN (Generator + Discriminator)
-*   **Input Dimension ($Z$):** 16 (Noise vector)
-*   **Constructed Features:** Received Signal $y$, Conditioning Vector (Pilot/Label info)
-*   **Training Steps:** 750,000 iterations
+\[
+y = hx + n
+\]
 
-## What You Need to Do
+計算接收訊號，其中 \(n\) 為加性高斯白雜訊（AWGN）。由於神經網路無法直接處理複數數據，因此將接收訊號 \(y\) 拆分為 **實部與虛部** 作為輸入特徵。此外，為了讓 CGAN 能夠在特定條件下生成樣本，本實驗建立了 **conditioning vector**，其內容包含傳送符號與通道係數的實部與虛部。透過這些資料，GAN 可以學習 Rayleigh fading 通道下接收訊號的統計分布。
 
-| Checklist  | Details                                                                                                                                                                                                                                                                                                                                   |
-| :--------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Code**   | Open `Exercise_2.4_starter.py` and locate the `generate_real_samples_with_labels_Rayleigh` function. You need to implement:<br> 1. random selection of channel coefficients ($h$);<br> 2. generation of random QAM symbols ($x$);<br> 3. simulation of received signal ($y = hx + n$);<br> 4. construction of the conditioning vector. |
-| **Data**   | Ensure `rayleigh_channel_dataset.mat` is present in the directory. You can generate it using the provided MATLAB script `QuaDRiGa_channel_generator.m`.                                                                                                                                                                                   |
-| **Run**    | Execute: `python Exercise_2.4_starter.py`                                                                                                                                                                                                                                                                                                 |
-| **Observe** | The script saves generated plots in the `ChannelGAN_Rayleigh_images` folder and model checkpoints in `Models/`.                                                                                                                                                                                                                           |
+---
 
-> **Hint:**
->
-> *   Use `np.random.choice` to sample from the dataset.
-> *   Remember that the received signal $y$ contains both real and imaginary parts.
-> *   The conditioning vector typically concatenates the transmitted symbol information (real/imag) and the channel information (real/imag), properly normalized.
+# 實驗設定
 
-## Files
+本實驗使用的 GAN 設定如下：
 
-| File                             | Purpose                                                                                |
-| :------------------------------- | :------------------------------------------------------------------------------------- |
-| `Exercise_2.4_starter.py`        | Starter script (with **TODO**).                                                        |
-| `QuaDRiGa_channel_generator.m`   | MATLAB script to generate the `rayleigh_channel_dataset.mat` dataset using QuaDRiGa.   |
-| `rayleigh_channel_dataset.mat`   | (Generated) The dataset required for training.                                         |
-| `QuaDRiGa-main.zip`              | QuaDRiGa library (if needed for generation).                                           |
+- **Dataset**：`rayleigh_channel_dataset.mat`（由 QuaDRiGa 生成）
+- **Modulation**：16-QAM
+- **Channel Model**：\(y = hx + n\)
+- **Noise Model**：Gaussian noise（AWGN）
+- **GAN Architecture**：Conditional GAN（Generator + Discriminator）
+- **Noise Vector Dimension (Z)**：16
+- **Training Iterations**：750000 iterations
+
+---
+
+# 程式實作內容
+
+在 `generate_real_samples_with_labels_Rayleigh()` 函式中完成以下四個步驟：
+
+1. **隨機選取通道係數**  
+   從通道資料集中隨機抽取通道係數 \(h\)。
+
+2. **生成隨機 QAM 符號**  
+   從 16-QAM 星座點中隨機選取傳送符號 \(x\)。
+
+3. **模擬接收訊號**  
+   使用通道模型 \(y = hx + n\) 計算接收訊號，並加入高斯雜訊。
+
+4. **建立 conditioning vector**  
+   將傳送符號與通道係數的實部與虛部組合為條件向量，作為 CGAN 的輸入條件。
+
+這些資料將作為 GAN 訓練中的 **real samples**。
+
+---
+
+# 如何執行
+
+## Step 1：生成通道資料
+
+先在 MATLAB 中執行 QuaDRiGa 腳本：
+
+```matlab
+QuaDRiGa_channel_generator
+執行後會生成通道資料檔：
+rayleigh_channel_dataset.mat
+
+## Step 2：執行 GAN 訓練
+
+確認 `rayleigh_channel_dataset.mat` 與 `Exercise_2_4_starter.py` 位於同一個資料夾，然後執行：
+
+```bash
+python Exercise_2_4_starter.py
+
+## Step 3：觀察結果
+程式在訓練過程中會產生接收訊號在複數平面上的分布圖：
+結果圖會儲存在：
+ChannelGAN_Rayleigh_images/
+模型 checkpoint 會儲存在：
+Models/
+若 GAN 成功學習 Rayleigh fading 通道分布，則生成的點會在複數平面上呈現集中於原點附近的隨機散佈形狀。

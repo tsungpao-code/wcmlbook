@@ -97,6 +97,8 @@ def xavier_init(size):
 def generate_real_samples_with_labels_Rayleigh(h_dataset, number=100):
      # 1. random channel
     h_complex = np.random.choice(h_dataset, number)
+    h_r = np . real ( h_complex )
+    h_i = np . imag ( h_complex )
 
     # 2. random QAM symbols
     labels_index = np.random.choice(len(mean_set_QAM), number)
@@ -138,7 +140,7 @@ mean_set_QAM = np.asarray([-3 - 3j, -3 - 1j, -3 + 1j, -3 + 3j, -1 - 3j, -1 - 1j,
 # load .mat dataset
 mat_file_path = 'rayleigh_channel_dataset.mat'  # file name
 mat_data = sio.loadmat(mat_file_path)
-h_dataset = mat_data['h_mimo'].flatten()
+h_dataset = mat_data['h_siso'].flatten()
 
 batch_size = 512
 condition_depth = 2
@@ -212,7 +214,7 @@ xmax = 4
 saver = tf.train.Saver()
 
 # ────────────────────────  Training Loop  ──────────────────────────────── #
-for it in range(750000):
+for it in range(7500):
     start_idx = it * batch_size % data_size
     if start_idx + batch_size >= len(data):
         continue

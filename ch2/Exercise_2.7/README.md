@@ -1,7 +1,46 @@
-# Exercise 2.7: Data-Driven SISO-OFDM Channel Estimation
+#  Exercise 2.7 — Data-Driven SISO-OFDM Channel Estimation
 
-This project implements a Deep Neural Network (DNN)-based channel estimator for a SISO-OFDM system as described in Exercise 2.7. The system is configured with 64 subcarriers, where the first OFDM symbol serves as pilot (64 QPSK-modulated pilot symbols) and the second OFDM symbol carries data (64-QAM modulation), with the signal-to-noise ratio (SNR) ranging from 5 dB to 40 dB. The objective of this project is to design a data-driven channel estimation model and evaluate its performance under different channel conditions. In this work, I completed the core function `build_ce_dnn()` in `tools/networks.py` by defining the input and output placeholders, where the input consists of concatenated pilot observations (Yp) and known transmitted pilots (Xp), and the output corresponds to the estimated channel frequency response H. I designed a multi-layer perceptron (MLP) architecture with two fully connected hidden layers using ReLU activation functions and a linear output layer, allowing the network to approximate the nonlinear mapping between received signals and channel responses. The loss function is defined as Mean Squared Error (MSE), which directly measures the estimation accuracy, and the model is optimized using the Adam optimizer with an exponential learning rate decay strategy to improve convergence stability.
+This project implements a **Deep Neural Network (DNN)-based channel estimator** for a SISO-OFDM system.  
+The goal is to learn the mapping between received pilot signals and the channel response, and evaluate its performance under different Signal-to-Noise Ratio (SNR) conditions.
 
-Beyond implementing the network architecture, I also constructed a complete training pipeline, including mini-batch training, validation evaluation, and model selection based on the best validation loss. The training process is monitored periodically, and the best-performing model parameters are stored and restored to ensure optimal performance. During the implementation, I encountered several practical issues and resolved them systematically. First, the original code required external `.npy` channel datasets that were not included in the repository, which prevented the program from running. To address this, I modified `raputil.py` to generate Rayleigh fading channels using complex Gaussian random variables, making the entire project self-contained and fully executable without external dependencies. Second, I identified and fixed a critical shape mismatch error in the channel matrix construction, which was caused by incorrect zero-padding dimensions when appending channel coefficients. By correcting the dimension handling to match the system size K, I ensured proper matrix operations and avoided broadcasting errors. Third, I resolved a file saving issue by creating the required `dnn_ce` directory and ensuring the model saving path is valid, allowing trained models to be stored successfully.
+---
 
-From the experimental results, the DNN model demonstrates stable training behavior, with the test MSE converging to approximately 0.53, indicating that the network is capable of learning the underlying channel estimation function effectively. The training process does not exhibit divergence or numerical instability, confirming that the architecture and optimization strategy are appropriate for this task. Compared to the original implementation, this version prioritizes robustness and executability by removing dataset dependencies and improving error handling, although it introduces slight differences in reproducibility due to the use of randomly generated Rayleigh channels. At the current stage, the project successfully completes the implementation and training of the DNN-based channel estimator. However, to fully satisfy the original exercise requirements, further work is needed, including implementing the LMMSE baseline for comparison, evaluating performance under CP-free conditions, and generating SNR versus MSE curves to reproduce Figure 2.9. These extensions will provide a more comprehensive evaluation of the DNN model and enable a fair comparison with traditional channel estimation methods.
+##  System Configuration
+
+The OFDM system is configured as follows:
+
+- **Subcarriers (K):** 64  
+- **Pilot Symbol:** 1st OFDM symbol (64 QPSK pilots)  
+- **Data Symbol:** 2nd OFDM symbol (64-QAM modulation)  
+- **SNR Range:** 5 dB ~ 40 dB (step = 5 dB)  
+- **Channel Type:** Rayleigh fading (generated in code)  
+- **Channel Estimation Methods:**
+  - DNN-based estimator (implemented)
+  - LMMSE estimator (baseline)
+
+---
+
+##  Methodology (原理說明)
+
+### 1. Channel Estimation Problem
+
+在 OFDM 系統中，接收訊號可表示為：
+
+Y = XH + N
+
+其中：
+
+- `Y`：接收訊號  
+- `X`：已知 pilot  
+- `H`：通道響應（未知）  
+- `N`：雜訊  
+
+傳統方法（LS / LMMSE）需要：
+- 通道統計資訊
+- 線性假設
+
+---
+
+### 2. DNN-Based Estimation
+
+本專案改用 **data-driven 方法**：

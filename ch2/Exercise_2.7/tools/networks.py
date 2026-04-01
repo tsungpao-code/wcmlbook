@@ -25,19 +25,23 @@ def build_ce_dnn(K, SNR, savefile, learning_rate=1e-3, training_epochs=2000, bat
     n_output = 2 * K
 
     # please fill in the blank in the following codes
-    nn_input = '# YOUR CODE HERE 1'
-    H_true = '# YOUR CODE HERE 2'    # label
+    nn_input = tf.placeholder(tf.float32, shape=[None, n_input], name='nn_input')
 
-    dense1 = '# YOUR CODE HERE 3'
-    dense2 = '# YOUR CODE HERE 4'
-    output_layer = '# YOUR CODE HERE 5'
+    # Ground truth channel H
+    H_true = tf.placeholder(tf.float32, shape=[None, n_output], name='H_true')
 
-    tmp = '# YOUR CODE HERE 6'
-    tmp = '# YOUR CODE HERE 7'
-    H_out = '# YOUR CODE HERE 8'
+    # DNN layers
+    dense1 = Dense(nh1, activation='relu')
+    dense2 = Dense(nh2, activation='relu')
+    output_layer = Dense(n_output, activation=None)
 
-    # Define loss and optimizer, minimize the l2 loss
-    loss_ = '# YOUR CODE HERE 9'
+    # Forward pass
+    tmp = dense1(nn_input)
+    tmp = dense2(tmp)
+    H_out = output_layer(tmp)
+
+    # Loss (MSE)
+    loss_ = tf.reduce_mean(tf.square(H_out - H_true))
     global_step = tf.Variable(0, trainable=False)
     decay_steps, lr_decay = 20000, 0.1
     lr_ = tf.train.exponential_decay(learning_rate, global_step, decay_steps, lr_decay, name='lr')
@@ -98,3 +102,4 @@ def build_ce_dnn(K, SNR, savefile, learning_rate=1e-3, training_epochs=2000, bat
     print("optimization finished")
 
     return sess, nn_input, H_out
+

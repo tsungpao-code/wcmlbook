@@ -95,7 +95,52 @@ lr = initial_lr × decay_rate^(step / decay_steps)
 - Added optimizer  
 
 ---
-##How to Run
+## How to Run
+### Step 1：Train DNN
+修改 main.py：
+ce_type = 'dnn'
+test_ce = False
+CP_flag = True
 
+執行：
+cd C:\Data-Driven
+python main.py
+會訓練模型並儲存：
+dnn_ce/CE_DNN_*.npz
+### Step 2：Test DNN
+修改：
+ce_type = 'dnn'
+test_ce = True
+執行：
+python main.py
 
+會輸出：
 
+MSE_T
+MSE_F
+
+並產生 .mat 檔
+### Step 3：Run LMMSE Baseline
+ce_type = 'mmse'
+test_ce = True
+與 DNN 做比較
+### Step 4（Optional）：No CP
+CP_flag = False
+可觀察無 CP 情況下效能
+### Training Results
+在 SNR = 40 dB 時：
+
+Test MSE ≈ 0.008
+模型成功收斂
+無 NaN 或 divergence
+### Observations
+DNN 能成功學習 channel estimation mapping
+高 SNR 時效果顯著優於低 SNR
+訓練過程穩定
+與 LMMSE 可進行性能比較
+### Conclusion
+本實驗成功實現 DNN-based channel estimation，並驗證：
+
+深度學習可取代傳統 channel estimation 方法
+在高 SNR 下具有良好性能
+可應用於未來 data-driven wireless systems

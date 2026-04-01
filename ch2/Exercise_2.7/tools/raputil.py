@@ -305,10 +305,34 @@ def LS_CE(Y,pilotValue,pilotCarriers,K,P,int_opt):
 def MMSE_CE(Y,pilotValue,pilotCarriers,K,P,h,SNR):
     # Please fill in the blanks in the following codes
 
-    '# YOUR CODE HERE'
-
-    W_MMSE = '# YOUR CODE HERE'
-    H_MMSE = '# YOUR CODE HERE'
+    snr = 10 ** ( SNR *0.1)
+    index = np . arange ( P )
+    H_tilde = np . zeros (P , dtype = complex )
+    H_tilde [ index ] = Y [ pilotCarriers ] / pilotValue [index ] # LS estimation
+    index = np . arange ( len ( h ) )
+    hh = h . dot ( np . conj ( h ) . T )
+    tmp = h * np . conj ( h ) * index
+    r = np . sum ( tmp ) / hh
+    r2 = tmp . dot ( index . T ) / hh
+    tau_rms = ( r2 - r **2) **0.5
+    df = 1 / K
+    j2pi_tau_df = 1 j *2* math . pi * tau_rms * df
+    K1 = np . reshape ( np . repeat ( np . arange ( K ) .T , P ) ,(K , P ) )
+    K2 = np . arange ( P )
+    for i in range (K -1) :
+        K2 = np . concatenate (( K2 , np . arange ( P ) ) )
+    K2 = np . reshape ( K2 ,( K , P ) )
+    rf = np . ones (( K , P ) , dtype = complex ) / (1+ j2pi_tau_df*( K1 - K2 *( K // P ) ) )
+    K3 = np . reshape ( np . repeat ( np . arange ( P ) .T , P ) ,(P , P ))
+    K4 = np . arange ( P )
+    for i in range (P -1) :
+        K4 = np . concatenate (( K4 , np . arange ( P ) ) )
+    K4 = np . reshape ( K4 ,( P , P ) )
+    rf2 = np . ones (( P , P ) , dtype = complex ) / (1+ j2pi_tau_df*( K // P ) *( K3 - K4 ) )
+    Rhp = rf
+    Rpp = rf2 + np . eye ( len ( H_tilde ) ) / snr                          
+    W_MMSE = Rhp . dot ( np . linalg . inv ( Rpp ) )
+    H_MMSE = ( W_MMSE . dot ( H_tilde . T ) ) . T
 
     return H_MMSE,W_MMSE
 

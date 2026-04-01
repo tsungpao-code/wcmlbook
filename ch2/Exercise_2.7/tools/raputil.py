@@ -401,12 +401,14 @@ def OAMP(K,yd,H,sigma2,channel_type=0,mu=2,Mr=4,Nt=4,T=4): #用tf或numpy实现
 
     return x_hat_demod,x_hat
 
-channel_train = np.load('tools/channel_train.npy')
-# channel_train = np.load('channel_train.npy')
-train_size = channel_train.shape[0]  #100000
-channel_test = np.load('tools/channel_test.npy')
-# channel_test = np.load('channel_test.npy')
-test_size = channel_test.shape[0] #390000
+# ===== Auto-generate Rayleigh channels =====
+# ===== Auto-generate Rayleigh channels =====
+train_size = 10000
+test_size = 2000
+L = CP   # channel length = 16
+
+channel_train = (np.random.randn(train_size, L) + 1j*np.random.randn(train_size, L)) / np.sqrt(2)
+channel_test  = (np.random.randn(test_size, L) + 1j*np.random.randn(test_size, L)) / np.sqrt(2)
 
 def get_cyclic_and_cutoff_matrix(h):
     H = np.zeros((K,K),dtype=complex)

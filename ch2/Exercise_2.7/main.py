@@ -14,10 +14,10 @@ from tools import problems, networks, train, raputil
 K = 64
 mu = 2
 SNR_train = [5, 10, 15, 20, 25, 30, 35, 40]
-training_epochs = 2000
+training_epochs = 100
 batch_size = 50
 ce_type = 'dnn'  # channel estimation: 'mmse', 'dnn'
-test_ce = True
+test_ce = False
 CP_flag = True
 
 BER = []

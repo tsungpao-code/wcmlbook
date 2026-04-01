@@ -4821,9 +4821,9 @@ Original code required `.npy` dataset.
 Modified to generate Rayleigh channel:
 
 ```python
-channel = (np.random.randn(...) + 1j*np.random.randn(...)) / sqrt(2)
+##channel = (np.random.randn(...) + 1j*np.random.randn(...)) / sqrt(2)
 
-👉 Makes project fully runnable
+ Makes project fully runnable
 ✔ Bug Fixes
 1. Shape mismatch error
 

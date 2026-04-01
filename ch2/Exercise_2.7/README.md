@@ -94,7 +94,7 @@ Optimizer:
 
 ---
 
-### ✔ Data Generation Fix
+## ✔ Data Generation Fix
 
 Original code required `.npy` dataset.  
 Modified to generate Rayleigh channel:

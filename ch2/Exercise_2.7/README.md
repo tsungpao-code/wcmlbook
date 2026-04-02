@@ -61,7 +61,7 @@ Y = XH + N
 
 - Output:
 - [Re(H), Im(H)] → 2K
-- 
+  
 ---
 
 ### 4. Network Architecture
@@ -83,7 +83,42 @@ optimizer = tf.train.AdamOptimizer(learning_rate=lr_)
 lr = initial_lr × decay_rate^(step / decay_steps)
 
 ---
+### 5. 加入 CP / 無 CP 比較機制
 
+使用兩種 OFDM 模型：
+- 無 CP → ofdm_simulate_cp_free()
+- 有 CP → ofdm_simulate()
+
+可以分析 CP 對 channel estimation 的影響
+
+---
+### 6. 建立四條線比較
+新增：
+main_compare_4lines.py
+用來同時比較：
+| 方法    | CP |
+| ----- | -- |
+| DNN   | 有  |
+| LMMSE | 有  |
+| DNN   | 無  |
+| LMMSE | 無  |
+
+
+
+---
+### 7. 繪製比較圖
+
+輸出：
+compare_results_4lines.png
+圖中包含四條曲線：
+-DNN with CP
+-LMMSE with CP
+-DNN without CP
+-LMMSE without CP
+
+
+
+---
 ## 🛠 Implementation Details
 
 ### ✔ Completed `build_ce_dnn()`

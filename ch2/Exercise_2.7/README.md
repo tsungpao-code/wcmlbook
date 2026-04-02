@@ -154,7 +154,7 @@ python main.py
 MSE_T
 MSE_F
 
-並產生 .mat 檔
+並產生檔
 ### Step 3：Run LMMSE Baseline
 ce_type = 'mmse'
 test_ce = True
@@ -162,6 +162,28 @@ test_ce = True
 ### Step 4（Optional）：No CP
 CP_flag = False
 可觀察無 CP 情況下效能
+並產生檔
+### Step 5跑四種方法比較
+執行：
+-python main_compare_4lines.py
+-此步驟會：
+載入 DNN 模型
+執行 LMMSE（不需訓練）
+計算 MSE
+畫出比較圖
+### Step 6查看結果
+輸出檔案：
+-compare_results_4lines.png
+### Step 7檔案結構
+Data-Driven/
+│
+├── main.py
+├── main_compare_4lines.py
+├── raputil.py
+├── networks.py
+├── dnn_ce/
+├── tools/
+└── compare_results_4lines.png
 ### Training Results
 在 SNR = 40 dB 時：
 

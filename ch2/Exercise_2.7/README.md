@@ -175,15 +175,16 @@ CP_flag = False
 輸出檔案：
 -compare_results_4lines.png
 ### Step 7檔案結構
+```text
 Data-Driven/
-│
-├── main.py
-├── main_compare_4lines.py
-├── raputil.py
-├── networks.py
-├── dnn_ce/
-├── tools/
-└── compare_results_4lines.png
+├── main.py                      # 訓練 DNN 模型
+├── main_compare_4lines.py      # 比較 DNN / LMMSE 在有無 CP 下的結果
+├── raputil.py                  # 通道模擬、LS / MMSE / 測試流程
+├── networks.py                 # DNN 架構與訓練流程
+├── dnn_ce/                     # 存放訓練好的 DNN 模型
+├── tools/                      # 其他輔助模組
+└── compare_results_4lines.png  # 最終比較圖
+
 ### Training Results
 在 SNR = 40 dB 時：
 

@@ -56,7 +56,7 @@ Produces a 4-panel dark-theme figure:
 - Panel 2: Micro-Doppler f_D,r(t)                           [eq. 5]
 - Panel 3: |f_D|_max vs carrier frequency f_c
 - Panel 4: |f_D|_max vs motor RPM
-
+```markdown
 ### 3. Python — Estimation Algorithm
 
 ```bash
@@ -67,6 +67,7 @@ python microdoppler_estimation.py
 
 ```bash
 python q2_serviceability_resilience.py
+# → q2_serviceability_results.txt
 ```
 Produces a 3-panel figure:
 - Panel 1: True vs estimated f_D,r(t) via L-FMCW + phase-differential
@@ -142,6 +143,15 @@ f̄_D,r[n] = (1/(2N_avg+1)) Σ_{m=−N_avg}^{N_avg} f̂_D,r[n+m]
 ```
 At (f_s=60kSPS, SNR=40dB, RL=5dB): bound → **18.83 Hz** (1.95% of |f_D|_max).
 
+```markdown
+---
+
+## Q2: Serviceability and Resilience Metrics
+
+For Q2, the UAV-aided network is considered serviceable if the micro-Doppler estimation error stays below the serviceability threshold:
+
+```text
+T = 50 Hz
 ---
 
 ## Dependencies

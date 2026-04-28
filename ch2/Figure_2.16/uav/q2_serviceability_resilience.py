@@ -184,12 +184,6 @@ R_sys = {r_sys:.6e}
 P_fail_one_sided = P(epsilon > T) = {p_fail_one_sided:.6f}
 R_sys_one_sided = {r_sys_one_sided:.6e}
 
-Interpretation:
-The RMS estimation error is much larger than the 50 Hz serviceability threshold.
-Therefore, the single-UAV serviceability violation probability is very high.
-For a 10-UAV swarm requiring at least 7 serviceable links, the system resilience
-index is almost zero. Thus, the network should trigger the P3 reconfiguration
-strategy and switch from the high-rate mode M0 to the resilient mode M1.
 """
 
     print(output)

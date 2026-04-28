@@ -69,10 +69,32 @@ python microdoppler_estimation.py
 python q2_serviceability_resilience.py
 # → q2_serviceability_results.txt
 ```
-Produces a 3-panel figure:
-- Panel 1: True vs estimated f_D,r(t) via L-FMCW + phase-differential
-- Panel 2: Reflection path power |â_r|²
-- Panel 3: RMS Doppler error bound vs SNR for multiple parameter configs  [eq. 20]
+This script computes:
+
+- RMS micro-Doppler estimation error based on Eq. (20)
+- Serviceability violation probability P_fail
+- Single-UAV serviceable probability
+- k-out-of-n system resilience index R_sys
+
+Default Q2 parameters:
+
+| Parameter | Value |
+|---|---:|
+| SNR | 10 dB |
+| Sampling rate f_s | 60 kSPS |
+| Return loss RL | 5 dB |
+| Threshold T | 50 Hz |
+| Number of UAVs n | 10 |
+| Required serviceable UAVs k | 7 |
+
+Expected output:
+
+```text
+RMS estimation error sigma = 10739.9282 Hz
+P_fail = P(|epsilon| > T) = 0.996285
+P_success = 0.003715
+R_sys = 1.159551e-15
+```
 
 ---
 
@@ -152,7 +174,135 @@ For Q2, the UAV-aided network is considered serviceable if the micro-Doppler est
 
 ```text
 T = 50 Hz
+```
+
+This threshold represents the requirement for maintaining NOMA power-domain multiplexing stability in a 6G UAV-aided URLLC network.
+
 ---
+
+### RMS Error from Eq. (20)
+
+From Eq. (20), the RMS error bound of the micro-Doppler frequency estimation is:
+
+```text
+10 log10 E(|epsilon_fD|^2) < 20 log10(f_s / pi) + RL − SNR
+```
+
+Converting it to the linear RMS error gives:
+
+```text
+sigma = sqrt(E(|epsilon_fD|^2))
+      = (f_s / pi) × 10^((RL − SNR) / 20)
+```
+
+For the Q2 setting:
+
+```text
+f_s = 60000 Hz
+SNR = 10 dB
+RL = 5 dB
+```
+
+the RMS estimation error is:
+
+```text
+sigma ≈ 10739.93 Hz
+```
+
+---
+
+### Serviceability Violation Probability
+
+The estimation error is modeled as a zero-mean Gaussian random variable:
+
+```text
+epsilon_fD ~ N(0, sigma^2)
+```
+
+Although the problem statement writes epsilon_fD > T, both positive and negative estimation errors can violate the serviceability requirement. Therefore, I use the two-sided violation probability:
+
+```text
+P_fail = P(|epsilon_fD| > T)
+       = 2Q(T / sigma)
+```
+
+With:
+
+```text
+T = 50 Hz
+sigma = 10739.93 Hz
+```
+
+we obtain:
+
+```text
+P_fail ≈ 0.996285
+P_success = 1 − P_fail ≈ 0.003715
+```
+
+This means that under the low-SNR condition, a single UAV link has a very high probability of failing the serviceability requirement.
+
+---
+
+### System Resilience Index
+
+For a UAV swarm with:
+
+```text
+n = 10
+k = 7
+```
+
+the network is considered resilient if at least 7 UAVs maintain serviceable links.
+
+Let:
+
+```text
+X ~ Binomial(n = 10, P_success)
+```
+
+Then the system resilience index is:
+
+```text
+R_sys = P(X >= 7)
+      = sum_{i=7}^{10} C(10,i) P_success^i (1 − P_success)^(10−i)
+```
+
+The calculated result is:
+
+```text
+R_sys ≈ 1.16 × 10^−15
+```
+
+Therefore, the system resilience index is almost zero under this low-SNR condition. This indicates that the network should trigger the P3 reconfiguration strategy and switch from the high-rate mode M0 to the resilient mode M1.
+
+---
+
+## Take-Home Exam Modification
+
+This repository was modified for the take-home mid-term exam. The original implementation focuses on the micro-Doppler channel model, the L-FMCW estimation algorithm, and visualization.
+
+I added a new script:
+
+```text
+q2_serviceability_resilience.py
+```
+
+This script extends the physical-layer micro-Doppler estimation result to a system-level serviceability and resilience analysis.
+
+Specifically, it:
+
+1. uses the RMS error bound from Eq. (20);
+2. computes the RMS estimation error sigma under the Q2 parameters;
+3. models the estimation error as a Gaussian random variable;
+4. calculates the serviceability violation probability P_fail;
+5. calculates the k-out-of-n system resilience index R_sys;
+6. interprets whether the UAV network should switch from M0 to M1.
+
+This modification connects the paper's micro-Doppler estimation error to 6G UAV-aided network serviceability and resilience.
+
+---
+
 
 ## Dependencies
 

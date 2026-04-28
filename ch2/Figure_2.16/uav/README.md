@@ -67,7 +67,7 @@ python microdoppler_estimation.py
 
 ```bash
 python q2_serviceability_resilience.py
-
+```
 Produces a 3-panel figure:
 - Panel 1: True vs estimated f_D,r(t) via L-FMCW + phase-differential
 - Panel 2: Reflection path power |â_r|²

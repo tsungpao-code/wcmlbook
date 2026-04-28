@@ -13,13 +13,15 @@ animated system model from:
 
 ```
 Micro-Doppler-Shift_Rotary-Wing-UAV_Sub6G/
-├── system-model.html               # Interactive animated system model (open in browser)
-├── microdoppler_channel.py         # Core physics simulation + analytical plots
-├── microdoppler_estimation.py      # L-FMCW estimation pipeline + RMSE bound
-├── README.md                       # This file
+├── system-model.html                  # Interactive animated system model
+├── microdoppler_channel.py            # Core physics simulation + analytical plots
+├── microdoppler_estimation.py         # L-FMCW estimation pipeline + RMSE bound
+├── q2_serviceability_resilience.py    # Q2: Serviceability violation probability and resilience index
+├── README.md                          # Project documentation
 └── [generated outputs]
     ├── microdoppler_results.png
-    └── microdoppler_estimation_results.png
+    ├── microdoppler_estimation_results.png
+    └── q2_serviceability_results.txt
 ```
 ---
 
@@ -61,6 +63,10 @@ Produces a 4-panel dark-theme figure:
 python microdoppler_estimation.py
 # → microdoppler_estimation_results.png  (~15 s)
 ```
+### 4. Python — Q2 Serviceability and Resilience Metrics
+
+```bash
+python q2_serviceability_resilience.py
 
 Produces a 3-panel figure:
 - Panel 1: True vs estimated f_D,r(t) via L-FMCW + phase-differential

@@ -492,6 +492,18 @@ The proposed architecture is expected to:
 | Expected advantage | Good temporal modeling | Lower UE overhead and better Doppler robustness |
 
 ---
+## Requirement Mapping
+
+The proposed DA-LiteTCN CsiNet directly addresses all requirements in the extra credit problem.
+
+| Requirement | How the Proposed Architecture Addresses It |
+|---|---|
+| Effectively utilizes temporal correlation | The BS-side TCN takes a sequence of latent CSI vectors as input. In the prototype, the input contains 4 consecutive CSI frames, so the model can learn temporal dependency across adjacent CSI matrices. |
+| Reduces computational overhead on the UE side | The UE only uses a lightweight CNN encoder with depthwise separable convolution. It does not run LSTM or any heavy temporal model. The heavier temporal modeling is moved to the BS side. |
+| Enhances robustness against Doppler spread | The model computes a Doppler indicator from adjacent latent vectors, `d_t = ||z_t - z_{t-1}||_2`. This indicator helps the BS-side decoder adjust reconstruction under different channel variation levels. |
+| Specific UE/BS module design | The UE handles lightweight spatial encoding, delta latent feedback, and Doppler indicator extraction. The BS handles latent recovery, Doppler-aware TCN processing, and residual CSI reconstruction. |
+| Training strategy | The model is trained using CSI sequences. The input is `[X_{t-T+1}, ..., X_t]`, and the target is `X_t`. The loss can combine reconstruction loss and temporal consistency loss. Online adaptation is optional and is performed only at the BS side. |
+| Ablation studies | Three ablation studies are proposed: removing Doppler conditioning, replacing TCN with LSTM, and comparing delta latent feedback with full latent feedback. |
 
 ## Conclusion
 

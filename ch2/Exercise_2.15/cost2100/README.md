@@ -11,7 +11,7 @@ https://github.com/cost2100/cost2100
 Only the modified Q7(a) generation script and generated datasets are included in this folder.
 ---
 
-## What You Need to Do
+## Need to Do
 
 | Step | Task | Details |
 | :---: | :--- | :--- |

@@ -5,6 +5,10 @@ The generated datasets are used later in Exercise 2.15 to evaluate the CSI recon
 
 In Q7(a), the task is to generate **more than five different channel datasets**. Therefore, this implementation generates **six `.mat` files** by changing the user distribution.
 
+The full COST2100 MATLAB source code is available at:
+https://github.com/cost2100/cost2100
+
+Only the modified Q7(a) generation script and generated datasets are included in this folder.
 ---
 
 ## What You Need to Do

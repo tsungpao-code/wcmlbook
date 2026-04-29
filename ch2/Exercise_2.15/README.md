@@ -236,41 +236,8 @@ In short, Q7(b) tests the weakness of a single-distribution model, while Q7(c) t
 
 ---
 
-## Is the Execution Correct?
 
-Yes. The execution is correct because:
 
-1. The script successfully loads all six Q7(a) COST2100 datasets.
-2. It trains a CsiNet model using only D1 for Q7(b).
-3. It evaluates the Q7(b) model on all six datasets.
-4. It mixes D1–D6 and trains a second CsiNet model for Q7(c).
-5. It evaluates the Q7(c) model on the same six datasets.
-6. It saves the final comparison table to `result/q7bc_nmse_results.csv`.
-
-This matches the requirement of Exercise 2.15:
-
-- Q7(b): evaluate a trained CsiNet model on each dataset.
-- Q7(c): mix the datasets, retrain CsiNet, and compare reconstruction performance.
-
----
-
-## Is the Program Correct?
-
-The program is correct for completing Q7(b)(c), because it follows the required experimental logic:
-
-- It reads the six COST2100 datasets generated in Q7(a).
-- It converts complex CSI into real/imaginary channels.
-- It builds a CsiNet-style autoencoder.
-- It trains a single-dataset model for Q7(b).
-- It trains a mixed-dataset model for Q7(c).
-- It computes NMSE for each dataset.
-- It outputs a comparison table.
-
-One implementation note is that this script uses a simplified CsiNet-style model rather than directly using the original `CsiNet_train.py` without modification. This is intentional because the original training script expects the original CsiNet dataset format, such as `DATA_Htrainin.mat`, while the Q7(a) COST2100 datasets use files like `D1_indoor_uniform.mat` and variables such as `H_norm` and `H_complex`.
-
-Therefore, `q7bc_csinet_cost2100.py` is a modified and compatible version for the Q7(a) generated COST2100 datasets.
-
----
 
 ## Discussion
 

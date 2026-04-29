@@ -63,3 +63,39 @@ A compressed sensing enhanced version of CsiNet:
 3. Remove `tf.reset_default_graph()` for TensorFlow 2.x compatibility.
 4. Code uses "channels_first" data format (do not modify without adjusting network).
 5. Default training epochs: 1000 (adjust based on dataset/hardware).
+
+
+## Q7(b): NMSE Evaluation on Each Dataset
+
+In Q7(b), the trained CsiNet model is evaluated on each COST2100 dataset generated in Q7(a).  
+The purpose is to test whether a model trained on one channel distribution can generalize to other user distributions.
+
+The evaluation metric is NMSE:
+
+\[
+NMSE =
+\frac{\|\mathbf{H}-\hat{\mathbf{H}}\|_2^2}
+{\|\mathbf{H}\|_2^2}
+\]
+
+The model trained on `D1_indoor_uniform.mat` is tested on:
+
+- `D1_indoor_uniform.mat`
+- `D2_indoor_center.mat`
+- `D3_indoor_edge.mat`
+- `D4_indoor_hotspot.mat`
+- `D5_indoor_ring.mat`
+- `D6_indoor_line.mat`
+
+The NMSE values are saved for comparison.
+
+---
+
+## Q7(c): Mixed-Dataset Training
+
+In Q7(c), all six COST2100 datasets are mixed together to train a new CsiNet model.  
+The purpose is to improve generalization by exposing the model to multiple channel distributions during training.
+
+The mixed model is then tested on the same six datasets and compared with the single-dataset model in Q7(b).
+
+If the mixed-dataset model achieves better average NMSE or smaller worst-case degradation, it indicates that mixed training improves the robustness of CSI feedback methods in practical wireless systems.

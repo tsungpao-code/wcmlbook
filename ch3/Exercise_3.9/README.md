@@ -79,7 +79,7 @@ The scripts are pre-configured with the following system parameters:
 本實驗包含三個主要腳本，請依照下列步驟執行：
 
 ### 1. 環境準備
-請確保您的 Python 環境已安裝 `numpy`, `matplotlib` 以及 `torch` (建議版本 1.10 以上)。
+請確保您的 Python 環境已安裝 `numpy`, `matplotlib` 以及 `torch` 。
 
 ### 2. 執行任務指令
 請在終端機（Terminal）中輸入以下指令來執行不同任務：

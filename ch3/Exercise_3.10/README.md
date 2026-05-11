@@ -51,3 +51,25 @@ The script is pre-configured with the specific parameters from the textbook:
 | `tools/utils.py` | Signal processing utilities. Implements QPSK/16QAM/64QAM modulation and demodulation, OFDM processing , channel modeling, nonlinear estimator, and LMMSE channel estimation. |
 | `tools/MIMO_detection.py` | Core end-to-end MIMO simulation script. Handles bit generation, modulation, channel transmission, detector invocation, and BER/MSE evaluation. |
 | `tools/problems.py` | Defines the MIMO detection problem, including system dimensions, channel model, and TensorFlow placeholders. |
+## 🛠️ 實作與修正細節 (Implementation & Modifications)
+
+在本次實作中，除了完成核心的演算法迭代邏輯外，為確保模型在極端 SNR 或深度展開訓練時的穩定性，加入了以下修正與優化：
+
+### 1. EP 演算法實作 (`tools/EP.py`)
+* **完整迭代邏輯：** 實作了高斯腔分佈 (Cavity distribution) 的均值與變異數計算、非線性估測 (NLE) 動差匹配，以及參數 $(\gamma, \Lambda)$ 的更新。
+* **🛡️ 修正 - 數值穩定性優化 (Log-Sum-Exp Trick)：** 在計算星座圖點的機率分佈時，指數函數 `np.exp()` 容易在低雜訊 (High SNR) 時產生溢位 (Overflow)。實作中加入了 `dist -= np.max(dist, axis=0)` 進行平移，這不影響最終的機率正規化，但能完美避開溢位崩潰問題。
+* **🛡️ 修正 - 異常變異數保護：** 在更新 $\Lambda$ 時，若出現負變異數，會強制退回前一次迭代的值，避免後續協方差矩陣無法反轉。
+
+### 2. EPNet 深度展開實作 (`tools/networks.py`)
+* **TensorFlow Graph 展開：** 使用 TensorFlow v1 的靜態圖機制 (Graph Mode) 將 EP 的 4 次迭代展開為 4 層神經網路，並將 Loss Function (L2 Loss) 綁定至最後一層輸出進行反向傳播。
+* **🛡️ 修正 - 可訓練阻尼係數與範圍限制 (Sigmoid Constraint)：** 依照提示，將每層的阻尼係數 $\beta_t$ 宣告為 `tf.Variable`。在阻尼更新步驟中，嚴格套用 `tf.math.sigmoid(beta_t)`，確保反向傳播過程中 $\beta_t$ 永遠被限制在 $(0,1)$ 的有效區間內，大幅提升訓練收斂的穩定性。
+* **🛡️ 修正 - 防止 NaN 崩潰 (Epsilon Protection)：** 在計算 `vab` (外在變異數) 以及傳遞給 `nle` 函數前，統一加入了 `tf.maximum(..., eps)` (其中 eps=5e-7)。此舉確保了神經網路在計算梯度時，不會發生除以零 (Division by zero) 或零取對數而導致 Loss 變成 `NaN` 的悲劇。
+
+---
+
+## 🚀 該如何執行 (How to Run)
+
+### 環境要求 (Prerequisites)
+本專案的深度展開網路依賴於 TensorFlow v1 的靜態圖 (Session) 寫法。請安裝 TensorFlow 2.x，因為程式碼中已包含 `tf.compat.v1` 的相容性處理：
+```bash
+pip install numpy scipy tensorflow

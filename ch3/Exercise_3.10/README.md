@@ -75,9 +75,8 @@ The script is pre-configured with the specific parameters from the textbook:
 pip install numpy scipy tensorflow
 ---
 
----
 
-## 📊 實驗結果與分析 (Experimental Results and Analysis)
+### 📊 實驗結果與分析 (Experimental Results and Analysis)
 
 本實驗針對 8x8 MIMO 系統在 Rayleigh 衰落通道下的訊號偵測性能進行評估，比較了傳統 Expectation Propagation (EP) 演算法與深度展開（Deep Unfolding）架構的 EPNet 演算法表現。
 

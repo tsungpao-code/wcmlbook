@@ -40,3 +40,55 @@ The scripts are pre-configured with the following system parameters:
 | `OAMP_ex_a.py` | NumPy-based skeleton code for the traditional OAMP algorithm (Task a). |
 | `OAMP_ex_b.py` | PyTorch-based skeleton code for OAMP-Net with learnable $(\gamma, \theta)$ (Task b). |
 | `OAMP_ex_c.py` | PyTorch-based skeleton code for OAMP-Net with learnable $(\gamma, \theta, \phi, \xi)$ (Task c). |
+
+# Exercise 3.9: OAMP and OAMP-Net for MIMO Detection
+
+本專案提供練習題 3.9 的骨架程式碼。任務是實作 **OAMP**（正交近似信息傳遞）演算法及其深度學習展開版本 **OAMP-Net**，以解決 MIMO 信號檢測問題。您將比較傳統迭代演算法與基於學習的方法之性能。
+
+## 實驗設定 (Experiment Setup)
+腳本預先配置了以下系統參數：
+* **天線配置：** $8 \times 8$ MIMO ($N_t = 8, N_r = 8$)
+* **調變方案：** QPSK ($\mu = 2$)
+* **通道模型：** 瑞利衰落通道（使用實數值分解）
+* **網絡/迭代深度：** 10 次迭代（層）
+* **SNR 範圍：** 0 dB 到 25 dB，增量為 5 dB
+* **訓練設定：** （針對任務 b 和 c）使用 MSE 損失函數的監督式學習、Adam 優化器，訓練 SNR = 20 dB。
+
+---
+
+## 實作進度更新 (Implementation Updates)
+
+### 已完成：任務 (a) 傳統 OAMP 演算法 (`OAMP_ex_a.py`)
+目前已成功在 `oamp_detector` 函式中，使用 NumPy 矩陣運算實作了 OAMP 演算法的 **5 個關鍵迭代步驟**：
+
+1.  **LMMSE 矩陣計算 (LMMSE Matrix Calculation)：**
+    實作了線性最小均方誤差估測器，並加入噪聲方差作為正則化項（Regularization term），以確保矩陣求逆時的數值穩定性。
+2.  **跡規範化 (Trace Normalization)：**
+    對線性估測矩陣 $W_{LMMSE}$ 進行縮放，使其滿足跡條件 $tr(W_t H) = K$，以維持誤差項的正交性。
+3.  **線性殘差計算 (Linear Residual Update)：**
+    根據當前的估計值計算線性觀測量 $r_t$。
+4.  **後驗方差估計 (Posterior Variance Estimation)：**
+    結合先驗方差與加性高斯白噪聲（AWGN），計算有效噪聲的方差 $\tau^2$。
+5.  **信號方差更新 (Signal Variance Update)：**
+    根據非線性 MMSE 降噪器後的殘差值，更新下一輪迭代所需的信號方差 $v^2$。
+
+---
+
+## 如何執行 (How to Run)
+
+本實驗包含三個主要腳本，請依照下列步驟執行：
+
+### 1. 環境準備
+請確保您的 Python 環境已安裝 `numpy`, `matplotlib` 以及 `torch` (建議版本 1.10 以上)。
+
+### 2. 執行任務指令
+請在終端機（Terminal）中輸入以下指令來執行不同任務：
+
+| 任務 | 執行指令 | 說明 |
+| :--- | :--- | :--- |
+| **執行 OAMP** | `python OAMP_ex_a.py` | 執行傳統迭代演算法（任務 a）。 |
+| **訓練/測試 OAMP-Net-b** | `python OAMP_ex_b.py` | 針對可學習參數 $(\gamma, \theta)$ 進行 OAMP-Net 訓練與測試（任務 b）。 |
+| **訓練/測試 OAMP-Net-c** | `python OAMP_ex_c.py` | 針對可學習參數 $(\gamma, \theta, \phi, \xi)$ 進行 OAMP-Net 訓練與測試（任務 c）。 |
+
+### 3. 結果比較
+執行完畢後，可以觀察並比較三者的 **BER vs. SNR** 效能曲線，分析學習型參數如何影響收斂速度與最終檢測性能。

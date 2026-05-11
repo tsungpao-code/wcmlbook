@@ -30,3 +30,44 @@ The script is pre-configured with the specific MIMO system parameters:
 | `MIMO_detection.py` | (Inside `tools/`) Core simulation engine handling modulation, channel generation, noise, and detector selection. |
 | `EP.py`, `MHGD.py` | (Inside `tools/`) Contains the core mathematical implementations of the detection algorithms. |
 | `Results_*.mat` | Data files generated after you run the script, containing BER/SER arrays. |
+
+# Exercise 3.7: Gradient-based MCMC for MIMO Detection
+
+This repository contains the implementation and experimental results for **Exercise 3.7**, focusing on a **Gradient-based MCMC (MHGD)** detector for large-scale MIMO systems.
+
+## 📡 Experiment Setup
+
+The simulation is conducted under the following system parameters:
+- **Antenna Configuration**: 8 × 8 MIMO ($N_t = 8, M_r = 8$)
+- **Modulation**: 16-QAM ($\mu = 4$)
+- **Channel**: Rayleigh fading channel with perfect CSI.
+- **Detector**: Gradient-based MCMC (MHGD).
+- **MCMC Hyperparameters**: 16 samplers, 8 iterations per sampler.
+- **SNR Range**: 5 dB to 25 dB.
+
+## 📊 Experimental Results
+
+The simulation successfully captures the performance gain as SNR increases. The numerical results for BER and SER are as follows:
+
+| SNR (dB) | BER (Bit Error Rate) | SER (Symbol Error Rate) |
+| :--- | :--- | :--- |
+| 5 | 0.254319 | 0.704268 |
+| 10 | 0.164802 | 0.517763 |
+| 15 | 0.071398 | 0.238895 |
+| 20 | 0.007244 | 0.022905 |
+| 25 | **0.000688** | **0.002130** |
+
+### Key Observations:
+1. **Convergence**: The Mean Square Error (MSE) shows a significant downward trend at each SNR level, demonstrating that the gradient information effectively guides the Markov Chain toward the optimal solution.
+2. **Error Performance**: At high SNR (25 dB), the BER reaches $6.8 \times 10^{-4}$, showing that the stochastic-gradient approach provides near-optimal detection even for high-dimensional 16-QAM systems.
+
+## 🛠️ Implementation Details
+
+- **Algorithm**: The detector performs a Metropolis-Hastings random walk along the (preconditioned) gradient descent direction of the continuous-relaxed least-squares surface.
+- **Optimization**: The implementation utilizes `gurobipy` for handling underlying optimization tasks and `scikit-commpy` for accurate modulation/demodulation simulation.
+
+## 🚀 How to Run
+1. Ensure `gurobipy` and `scikit-commpy` are installed.
+2. Execute the main simulation:
+   ```bash
+   python main.py

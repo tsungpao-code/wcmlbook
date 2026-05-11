@@ -73,7 +73,9 @@ The script is pre-configured with the specific parameters from the textbook:
 本專案的深度展開網路依賴於 TensorFlow v1 的靜態圖 (Session) 寫法。請安裝 TensorFlow 2.x，因為程式碼中已包含 `tf.compat.v1` 的相容性處理：
 ```bash
 pip install numpy scipy tensorflow
+---
 
+---
 
 ## 📊 實驗結果與分析 (Experimental Results and Analysis)
 

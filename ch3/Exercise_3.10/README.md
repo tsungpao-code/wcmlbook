@@ -74,7 +74,6 @@ The script is pre-configured with the specific parameters from the textbook:
 ```bash
 pip install numpy scipy tensorflow
 
----
 
 ## 📊 實驗結果與分析 (Experimental Results and Analysis)
 

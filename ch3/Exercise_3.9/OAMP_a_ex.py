@@ -41,19 +41,24 @@ def oamp_detector(y, H, sigma_w_sq, max_iter=10):
     v_sq = 0.5
 
     for t in range(max_iter):
-        # Step 1: Compute LMMSE estimation matrix
-        # W_LMMSE = ...
-
-        # Step 2: Normalize W_LMMSE using trace
-        # tr_val = ...
-        # W_t = ...
-
-        # Step 3: Compute residual and linear estimate
-        # residual = ...
-        # r_t = ...
-
-        # Step 4: Estimate posterior variance
-        #tau_sq = ...
+        # Step 1: LMMSE matrix W_LMMSE
+        # Hint提及需要加入 noise variance 作為 regularization term 以維持數值穩定
+        mat = H @ H.T + (sigma_w_sq / v_sq) * np.eye(N)
+        W_LMMSE = H.T @ np.linalg.inv(mat)
+        tr_val = np.trace(W_LMMSE @ H)
+        
+        # Step 2: Trace normalization for W_t
+        W_t = (K / tr_val) * W_LMMSE 
+        
+        # Step 3: Linear residual r_t
+        residual = y - H @ x_hat
+        r_t = x_hat + W_t @ residual
+        
+        # Step 4: Posterior variance \tau^2
+        B_t = np.eye(K) - W_t @ H
+        term1 = (1 / K) * np.trace(B_t @ B_t.T) * v_sq
+        term2 = (1 / (2 * K)) * np.trace(W_t @ W_t.T) * sigma_w_sq
+        tau_sq = term1 + term2
 
         # Nonlinear MMSE denoising step, symbol-wise MMSE for QPSK
         a0 = -1 / np.sqrt(2)
@@ -70,10 +75,9 @@ def oamp_detector(y, H, sigma_w_sq, max_iter=10):
             x_hat_next[j] = a0 * probs[0] + a1 * probs[1]
 
         # Step 5: Update signal variance estimate v^2
-        # residual_next = ...
-        # norm_residual_sq = ...
-        # v_next_sq = ...
-        # v_next_sq = max(v_next_sq, 1e-9)
+        residual_next = y - H @ x_hat_next
+        norm_residual_sq = np.sum(np.abs(residual_next) ** 2)
+        v_next_sq = (norm_residual_sq - N * sigma_w_sq) / np.trace(H.T @ H)
 
         x_hat = x_hat_next
         v_sq = v_next_sq

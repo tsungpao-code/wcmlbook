@@ -83,6 +83,7 @@ class OAMPNet_b(nn.Module):
 
         for t in range(self.iter_num):
             # Step 1: Compute the LMMSE estimation matrix W_LMMSE
+            H_trans = H.transpose(1, 2)  
             H_Ht = torch.bmm(H, H_trans)
             # 加入 Regularization term
             reg = (sigma_w_sq / v_sq) * torch.eye(N, device=device).unsqueeze(0) 

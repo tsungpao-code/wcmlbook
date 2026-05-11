@@ -1,4 +1,4 @@
-# Exercise 3.10: EP and EPNet for MIMO Detection
+<img width="1497" height="575" alt="image" src="https://github.com/user-attachments/assets/7b77c9c5-a49c-4531-a391-20ae4d5c0d9c" /># Exercise 3.10: EP and EPNet for MIMO Detection
 This repository provides the starter code for Exercise 3.10, which focuses on model-based signal detection algorithms for MIMO systems. The goal of this exercise is to implement the EP detector and its deep-unfolded learning-enhanced version (EPNet), and to evaluate their BER performance in a Rayleigh fading MIMO environment.
 
 ## Experiment Setup
@@ -72,11 +72,12 @@ The script is pre-configured with the specific parameters from the textbook:
 ### 環境要求 (Prerequisites)
 本專案的深度展開網路依賴於 TensorFlow v1 的靜態圖 (Session) 寫法。請安裝 TensorFlow 2.x，因為程式碼中已包含 `tf.compat.v1` 的相容性處理：
 ```bash
-pip install numpy scipy tensorflow```
+pip install numpy scipy tensorflow
+```
 ---
 
 
-`## 📊 實驗結果與分析 (Experimental Results and Analysis)
+## 📊 實驗結果與分析 (Experimental Results and Analysis)
 
 本實驗針對 8x8 MIMO 系統在 Rayleigh 衰落通道下的訊號偵測性能進行評估，比較了傳統 Expectation Propagation (EP) 演算法與深度展開（Deep Unfolding）架構的 EPNet 演算法表現。
 

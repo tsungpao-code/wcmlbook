@@ -72,11 +72,11 @@ The script is pre-configured with the specific parameters from the textbook:
 ### 環境要求 (Prerequisites)
 本專案的深度展開網路依賴於 TensorFlow v1 的靜態圖 (Session) 寫法。請安裝 TensorFlow 2.x，因為程式碼中已包含 `tf.compat.v1` 的相容性處理：
 ```bash
-pip install numpy scipy tensorflow
+pip install numpy scipy tensorflow```
 ---
 
 
-### 📊 實驗結果與分析 (Experimental Results and Analysis)
+`## 📊 實驗結果與分析 (Experimental Results and Analysis)
 
 本實驗針對 8x8 MIMO 系統在 Rayleigh 衰落通道下的訊號偵測性能進行評估，比較了傳統 Expectation Propagation (EP) 演算法與深度展開（Deep Unfolding）架構的 EPNet 演算法表現。
 

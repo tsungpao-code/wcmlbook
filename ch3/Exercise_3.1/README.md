@@ -34,7 +34,7 @@ vol. 7, no. 1, pp. 114–117, Feb. 2018.
 
 ---
 
-## 實驗結果與說明
+## 任務(b)實驗結果與說明
 
 本次 Exercise 3.1 的主要目標是使用 learning-based signal detection 方法，透過 FC-DNN 在 OFDM 系統中進行通道隱式估測與 transmitted bits 偵測。實驗以 QPSK modulation 為主要設定，其中 `mu = 2`，OFDM subcarriers 數量為 `K = 64`，並比較不同 SNR 與不同 pilot 數量對 BER（Bit Error Rate）的影響。
 

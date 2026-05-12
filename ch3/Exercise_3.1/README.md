@@ -65,3 +65,22 @@ Task (b) 的 BER 結果如下表所示：
 此外，當 pilot 數量改變時，pilot file 也需要重新產生，因為 pilot bit 長度應為 `P * mu`，而不是 `K * mu`。若舊的 `Pilot_8`、`Pilot_16` 或 `Pilot_64` 檔案仍存在，可能造成 `ValueError: shape mismatch`，因此需要刪除舊 pilot 檔案或在程式中加入長度檢查，確保 pilotValue 的長度與 pilotCarriers 數量一致。
 
 總結來說，本次實驗成功完成不同 SNR 與不同 pilot 數量下的 BER 比較，結果證明 learning-based OFDM detector 的效能會受到 SNR 與 pilot 設定影響；當 SNR 較高或 pilot 數量較多時，模型能取得更好的偵測結果，BER 也會明顯下降。
+
+## Task (c): 64-QAM Signal Detection
+
+In Task (c), the modulation scheme is changed from QPSK to 64-QAM while keeping the other simulation settings unchanged. Since 64-QAM carries 6 bits per symbol, the modulation parameter is changed from `mu = 2` to `mu = 6` in both `Train.py` and `Test.py`. In addition, the predicted bit range is changed to `np.arange(48, 96)` in `main.py`, and the DNN output layer size is changed to `n_output = 48`.
+
+The BER results of 64-QAM with Pilot = 16 are shown below:
+
+| SNR (dB) | 64-QAM, Pilot = 16 BER |
+|---:|---:|
+| 5 | 0.35137498 |
+| 10 | 0.32710410 |
+| 15 | 0.31131250 |
+| 20 | 0.30381250 |
+| 25 | 0.30039500 |
+
+From the results, the BER decreases as the SNR increases. However, compared with the QPSK case in Task (b), the BER of 64-QAM is much higher. This is because 64-QAM has a denser constellation, meaning that the Euclidean distance between adjacent constellation points is smaller. Therefore, 64-QAM is more sensitive to noise and channel distortion. Even when the SNR increases, the detector still has a higher probability of making bit detection errors compared with QPSK.
+
+Overall, the results show that although 64-QAM can transmit more bits per symbol, it also requires a better channel condition and a stronger detection model to achieve low BER. Compared with QPSK, 64-QAM provides higher spectral efficiency but has worse BER performance under the same pilot number and SNR setting.
+

@@ -65,14 +65,13 @@ Task (b) 的 BER 結果如下表所示：
 此外，當 pilot 數量改變時，pilot file 也需要重新產生，因為 pilot bit 長度應為 `P * mu`，而不是 `K * mu`。若舊的 `Pilot_8`、`Pilot_16` 或 `Pilot_64` 檔案仍存在，可能造成 `ValueError: shape mismatch`，因此需要刪除舊 pilot 檔案或在程式中加入長度檢查，確保 pilotValue 的長度與 pilotCarriers 數量一致。
 
 總結來說，本次實驗成功完成不同 SNR 與不同 pilot 數量下的 BER 比較，結果證明 learning-based OFDM detector 的效能會受到 SNR 與 pilot 設定影響；當 SNR 較高或 pilot 數量較多時，模型能取得更好的偵測結果，BER 也會明顯下降。
+## Task (c)：64-QAM 訊號偵測
 
-## Task (c): 64-QAM Signal Detection
+在 Task (c) 中，本實驗將 modulation scheme 由 QPSK 改為 64-QAM，並在其他模擬設定大致不變的情況下，觀察調變方式改變後對 BER 的影響。由於 64-QAM 每個 symbol 可以承載 6 bits，因此需要將 `Train.py` 與 `Test.py` 中的 `mu` 由 `2` 改為 `6`。此外，因為每個 DNN 需要預測的 bit 數增加，所以也需要將 `main.py` 中的 `pred_range` 改為 `np.arange(48,96)`，並將 `Train.py` 與 `Test.py` 中的 DNN output size 改為 `n_output = 48`。
 
-In Task (c), the modulation scheme is changed from QPSK to 64-QAM while keeping the other simulation settings unchanged. Since 64-QAM carries 6 bits per symbol, the modulation parameter is changed from `mu = 2` to `mu = 6` in both `Train.py` and `Test.py`. In addition, the predicted bit range is changed to `np.arange(48, 96)` in `main.py`, and the DNN output layer size is changed to `n_output = 48`.
+本小題使用 64-QAM modulation，並以 Pilot = 16 作為實驗設定，分別測試 SNR = 5、10、15、20、25 dB 下的 BER 表現。實驗結果如下表所示：
 
-The BER results of 64-QAM with Pilot = 16 are shown below:
-
-| SNR (dB) | 64-QAM, Pilot = 16 BER |
+| SNR (dB) | 64-QAM，Pilot = 16 BER |
 |---:|---:|
 | 5 | 0.35137498 |
 | 10 | 0.32710410 |
@@ -80,21 +79,27 @@ The BER results of 64-QAM with Pilot = 16 are shown below:
 | 20 | 0.30381250 |
 | 25 | 0.30039500 |
 
-From the results, the BER decreases as the SNR increases. However, compared with the QPSK case in Task (b), the BER of 64-QAM is much higher. This is because 64-QAM has a denser constellation, meaning that the Euclidean distance between adjacent constellation points is smaller. Therefore, 64-QAM is more sensitive to noise and channel distortion. Even when the SNR increases, the detector still has a higher probability of making bit detection errors compared with QPSK.
+由表格結果可以觀察到，當 SNR 增加時，BER 整體呈現下降趨勢，表示在較高 SNR 的情況下，接收訊號受到 noise 的影響較小，因此 DNN detector 可以更準確地恢復 transmitted bits。不過，相較於 Task (b) 中 QPSK 的結果，64-QAM 的 BER 明顯較高。這是因為 64-QAM 的 constellation points 較密集，相鄰 symbols 之間的 Euclidean distance 較小，因此更容易受到 noise 與 channel distortion 影響，造成 bit detection error 增加。
 
-Overall, the results show that although 64-QAM can transmit more bits per symbol, it also requires a better channel condition and a stronger detection model to achieve low BER. Compared with QPSK, 64-QAM provides higher spectral efficiency but has worse BER performance under the same pilot number and SNR setting.
+整體而言，64-QAM 雖然可以在每個 symbol 中傳送更多 bits，因此具有較高的 spectral efficiency，但也因為 constellation 較密集，所以需要更好的通道條件與更強的 detection model 才能達到較低的 BER。與 QPSK 相比，在相同 pilot 數量與 SNR 條件下，64-QAM 的 BER 表現較差，顯示高階調變雖然能提高傳輸速率，但也會增加偵測難度。
 
-## Task (d): Single Large DNN
+---
+
+## Task (d)：Single Large DNN
 
 在 Task (d) 中，本實驗將 modulation scheme 改回 QPSK，因此 `mu = 2`。由於 OFDM 系統共有 64 個 subcarriers，而 QPSK 每個 symbol 可承載 2 bits，因此每個 OFDM data symbol 共有 128 個 transmitted bits。為了讓單一 DNN 一次預測完整的 bit vector，本實驗將 `main.py` 中的 `pred_range` 改為 `np.arange(0,128)`，並將 `Train.py` 與 `Test.py` 中的 DNN output size 改為 `n_output = 128`。
 
-相較於原本使用多個 smaller DNN 分別預測不同 bit segment 的方法，Task (d) 使用 single large DNN 直接預測全部 128 bits。由於 output dimension 從 16 增加到 128，模型需要學習的 mapping 更複雜，因此需要增加 hidden layer 的神經元數量，以提升模型容量。
+原本的架構是使用多個 smaller DNN，每個 DNN 只負責預測一小段 transmitted bits，例如 output size = 16。Task (d) 則改為使用 single large DNN，讓同一個 DNN 一次輸出完整的 128 bits。這樣的做法可以讓模型直接預測整個 transmitted bit vector，但由於 output dimension 從 16 增加到 128，模型需要學習的 mapping 更複雜，因此訓練難度也會提高。
 
-本實驗將 single large DNN 與原本 smaller DNN 架構進行比較。比較結果如下：
+本實驗使用 QPSK、Pilot = 16、SNR = 20 dB 作為比較設定，並將 single large DNN 與原本的 smaller DNN 架構進行比較。比較結果如下表所示：
 
-| Method | Modulation | Pilot | SNR (dB) | Output Size | BER |
+| 方法 | Modulation | Pilot | SNR (dB) | Output Size | BER |
 |---|---|---:|---:|---:|---:|
-| Original smaller DNN | QPSK | 16 | 20 | 16 | 0.007111251 |
-| Single large DNN | QPSK | 16 | 20 | 128 | xxx |
+| 原本的 smaller DNN | QPSK | 16 | 20 | 16 | 0.007111251 |
+| Single large DNN | QPSK | 16 | 20 | 128 | 0.145289060 |
 
-由比較結果可以看出，single large DNN 雖然可以一次預測完整的 transmitted bits，但由於輸出維度較大，模型訓練難度也會提高。若 network capacity 或 training epochs 不足，BER 可能會比原本使用多個 smaller DNN 的方法更高。因此，single large DNN 的優點是架構較直觀且可一次輸出全部 bits，但缺點是模型較大、訓練較困難，且可能需要更多訓練時間才能達到較低 BER。
+由比較結果可以觀察到，single large DNN 的 BER 高於原本的 smaller DNN。原本 smaller DNN 在 Pilot = 16、SNR = 20 dB 時的 BER 為 0.007111251，而 single large DNN 的 BER 為 0.145289060。這表示雖然 single large DNN 可以一次預測全部 128 個 transmitted bits，但由於輸出維度較大，模型需要同時學習更多 bit positions 的對應關係，因此訓練難度明顯增加。
+
+造成 single large DNN BER 較高的原因，主要是因為 output size 從 16 增加到 128 後，模型參數需要處理更複雜的輸入與輸出關係。如果 hidden layer 容量不足，或 training epochs 不夠多，模型可能無法充分收斂，因此 BER 會比原本多個 smaller DNN 的架構更高。相反地，原本的 smaller DNN 每次只需要預測部分 bits，學習任務較簡單，因此能得到較低的 BER。
+
+整體而言，single large DNN 的優點是架構較直觀，且可以一次輸出完整的 transmitted bit vector；缺點是模型輸出維度較大、訓練較困難，且需要更大的 network capacity 與更多訓練時間才能達到較好的 BER 表現。因此，若以 BER 效能作為主要考量，原本使用多個 smaller DNN 分段預測 bits 的方法表現較佳；若以模型架構簡化與一次輸出完整 bit vector 為目標，single large DNN 則是一種可行但需要進一步調整模型容量的方式。
